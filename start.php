@@ -1,0 +1,4 @@
+<?php
+/**
+ * Main plugin file
+ */
