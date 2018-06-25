@@ -9,7 +9,7 @@ if (empty($owners)) {
 	return;
 }
 
-if (isset($vars['entity']) || isset($vars['guid'])) {
+if ((isset($vars['entity']) && !empty($vars['entity'])) || (isset($vars['guid']) && !empty($vars['guid']))) {
 	// probably edit form, not supported
 	return;
 }
