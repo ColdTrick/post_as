@@ -16,6 +16,8 @@ class SaveAction {
 	 * @param string $type   the type of the hook
 	 * @param mixed  $return current return value
 	 * @param mixed  $params supplied params
+	 *
+	 * @return void
 	 */
 	public static function prepareAction($hook, $type, $return, $params) {
 		
