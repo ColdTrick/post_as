@@ -20,6 +20,8 @@ function post_as_init() {
 	// extend views
 	elgg_extend_view('forms/blog/save', 'post_as/input');
 	elgg_register_plugin_hook_handler('action', 'blog/save', '\ColdTrick\PostAs\SaveAction::prepareAction');
+	elgg_extend_view('forms/static/edit', 'post_as/input');
+	elgg_register_plugin_hook_handler('action', 'static/edit', '\ColdTrick\PostAs\SaveAction::prepareAction');
 	
 	// regsiter actions
 	elgg_register_action('post_as/usersettings/save', __DIR__ . '/actions/post_as/usersettings/save.php');
