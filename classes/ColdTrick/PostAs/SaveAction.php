@@ -112,7 +112,7 @@ class SaveAction {
 		elgg_clear_sticky_form('post_as');
 		
 		// @todo make this configurable
-		if (!in_array($object->getSubtype(), ['blog'])) {
+		if (!in_array($object->getSubtype(), ['blog', 'static'])) {
 			return;
 		}
 		
