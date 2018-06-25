@@ -29,6 +29,9 @@ echo elgg_view_field([
 	'#type' => 'select',
 	'#label' => elgg_echo('post_as:input:label'),
 	'name' => 'post_as_owner_guid',
-	'value' => $user->guid,
+	'value' => elgg_get_sticky_value('post_as', 'post_as_owner_guid', $user->guid),
 	'options_values' => $options_values,
 ]);
+
+// clear sticky form
+elgg_clear_sticky_form('post_as');

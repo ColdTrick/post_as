@@ -42,6 +42,9 @@ class SaveAction {
 			return;
 		}
 		
+		// sticky form
+		elgg_make_sticky_form('post_as');
+				
 		// check container_guid === user
 		$container_guid = (int) get_input('container_guid');
 		if (!empty($container_guid)) {
@@ -102,6 +105,9 @@ class SaveAction {
 		if (!$this->user instanceof \ElggUser) {
 			return;
 		}
+		
+		// clear sticky form
+		elgg_clear_sticky_form('post_as');
 		
 		// @todo make this configurable
 		if (!in_array($object->getSubtype(), ['blog'])) {
