@@ -1,2 +1,9 @@
 Version history
 ===============
+
+1.0 (2018-06-28):
+
+- added: Dutch translation
+- added: form extension and save action support
+- added: form to manage authorized users
+- added: support for static
