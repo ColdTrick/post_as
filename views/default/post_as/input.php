@@ -9,7 +9,9 @@ if (empty($owners)) {
 	return;
 }
 
-if ((isset($vars['entity']) && !empty($vars['entity'])) || (isset($vars['guid']) && !empty($vars['guid']))) {
+$show_on_edit = (bool) elgg_extract('show_on_edit', $vars, false);
+
+if (!$show_on_edit && ((isset($vars['entity']) && !empty($vars['entity'])) || (isset($vars['guid']) && !empty($vars['guid'])))) {
 	// probably edit form, not supported
 	return;
 }
