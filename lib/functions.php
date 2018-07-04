@@ -42,31 +42,40 @@ function post_as_get_authorized_users($user_guid, $guid_only = false) {
  *
  * @param int $user_guid the user to fetch for (default: current user)
  *
- * @return ElggUser[]
+ * @return ElggUser[]|int[]
  */
-function post_as_get_posters($user_guid = 0) {
+function post_as_get_posters($user_guid = 0, $guid_only = false) {
 	
+	$guid_only = (bool) $guid_only;
 	$user_guid = (int) $user_guid;
 	if ($user_guid < 1) {
 		$user_guid = elgg_get_logged_in_user_guid();
 	}
 	
-	if (empty($user_guid)) {
+	if ($user_guid < 1) {
 		return [];
 	}
 	
-	$dbprefix = elgg_get_config('dbprefix');
-	
-	return elgg_get_entities_from_relationship([
+	$options = [
 		'type' => 'user',
 		'limit' => false,
 		'relationship' => POST_AS_RELATIONSHIP,
 		'relationship_guid' => $user_guid,
-		'joins' => [
+	];
+	if ($guid_only) {
+		$options['callback'] = function($row) {
+			return (int) $row->guid;
+		};
+	} else {
+		$dbprefix = elgg_get_config('dbprefix');
+		
+		$options['joins'] = [
 			"JOIN {$dbprefix}users_entity ue ON e.guid = ue.guid",
-		],
-		'order_by' => 'ue.name ASC',
-	]);
+		];
+		$options['order_by'] = 'ue.name ASC';
+	}
+	
+	return elgg_get_entities_from_relationship($options);
 }
 
 /**

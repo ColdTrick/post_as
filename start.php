@@ -23,6 +23,9 @@ function post_as_init() {
 	elgg_extend_view('forms/static/edit', 'post_as/input');
 	elgg_register_plugin_hook_handler('action', 'static/edit', '\ColdTrick\PostAs\SaveAction::prepareAction');
 	
+	// plugin hooks
+	elgg_register_plugin_hook_handler('permissions_check', 'object', '\ColdTrick\PostAs\Permissions::canEdit');
+	
 	// regsiter actions
 	elgg_register_action('post_as/usersettings/save', __DIR__ . '/actions/post_as/usersettings/save.php');
 }
