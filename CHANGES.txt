@@ -1,6 +1,11 @@
 Version history
 ===============
 
+1.1 (2018-07-13):
+
+- added: option to show post_as input on edit forms
+- added: plugin setting to allow edit of content
+
 1.0 (2018-06-28):
 
 - added: Dutch translation
