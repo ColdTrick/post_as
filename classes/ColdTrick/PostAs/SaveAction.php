@@ -12,14 +12,11 @@ class SaveAction {
 	/**
 	 * Prepare an action for post as
 	 *
-	 * @param string $hook   the name of the hook
-	 * @param string $type   the type of the hook
-	 * @param mixed  $return current return value
-	 * @param mixed  $params supplied params
+	 * @param \Elgg\Hook $hook 'action:validate', '<action name>'
 	 *
 	 * @return void
 	 */
-	public static function prepareAction($hook, $type, $return, $params) {
+	public static function prepareAction(\Elgg\Hook $hook) {
 		
 		// check for new owner_guid
 		$post_as_owner_guid = (int) get_input('post_as_owner_guid');
