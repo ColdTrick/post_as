@@ -34,7 +34,7 @@ function post_as_get_authorized_users($user_guid, $guid_only = false) {
 		};
 	}
 	
-	return elgg_get_entities_from_relationship($options);
+	return elgg_get_entities($options);
 }
 
 /**
@@ -67,15 +67,13 @@ function post_as_get_posters($user_guid = 0, $guid_only = false) {
 			return (int) $row->guid;
 		};
 	} else {
-		$dbprefix = elgg_get_config('dbprefix');
-		
-		$options['joins'] = [
-			"JOIN {$dbprefix}users_entity ue ON e.guid = ue.guid",
+		$options['order_by_metadata'] = [
+			'name' => 'name',
+			'direction' => 'ASC',
 		];
-		$options['order_by'] = 'ue.name ASC';
 	}
 	
-	return elgg_get_entities_from_relationship($options);
+	return elgg_get_entities($options);
 }
 
 /**
