@@ -43,19 +43,20 @@ class SaveAction {
 		
 		// sticky form
 		elgg_make_sticky_form('post_as');
-				
+		
 		// check container_guid === user
 		$container_guid = (int) get_input('container_guid');
 		if (!empty($container_guid)) {
-			$ia = elgg_set_ignore_access(true);
-			
-			$container = get_entity($container_guid);
-			if ($container instanceof \ElggUser) {
+			elgg_call(ELGG_IGNORE_ACCESS, function() use ($container_guid, $post_as_owner_guid) {
+				$container = get_entity($container_guid);
+				if (!$container instanceof \ElggUser) {
+					return;
+				}
+				
 				// make sure this is the new owner/container
-				set_input('container_guid', $post_as_owner_guid);
-			}
-			
-			elgg_set_ignore_access($ia);
+				$request = _elgg_services()->request;
+				$request->query->set('container_guid', $post_as_owner_guid);
+			});
 		}
 		
 		// backup session user
@@ -91,15 +92,13 @@ class SaveAction {
 	}
 	
 	/**
-	 * Track that this entity was create on behald of somebody else
+	 * Track that this entity was create on behalf of somebody else
 	 *
-	 * @param string      $event  the name of the event
-	 * @param string      $type   the type of the event
-	 * @param \ElggEntity $object supplied entity
+	 * @param \Elgg\Event $event 'create', 'object'
 	 *
 	 * @return void
 	 */
-	public function trackPostAs($event, $type, $object) {
+	public function trackPostAs(\Elgg\Event $event) {
 		
 		if (!$this->user instanceof \ElggUser) {
 			return;
@@ -107,6 +106,8 @@ class SaveAction {
 		
 		// clear sticky form
 		elgg_clear_sticky_form('post_as');
+		
+		$object = $event->getObject();
 		
 		// @todo make this configurable
 		if (!in_array($object->getSubtype(), ['blog', 'static'])) {

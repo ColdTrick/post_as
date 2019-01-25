@@ -15,6 +15,8 @@ class Bootstrap extends DefaultPluginBootstrap {
 		// extend views
 		elgg_extend_view('forms/blog/save', 'post_as/input');
 		elgg_extend_view('forms/static/edit', 'post_as/input');
+		
+		$this->registerHooks();
 	}
 	
 	/**

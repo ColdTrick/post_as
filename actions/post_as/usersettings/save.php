@@ -20,8 +20,7 @@ $user = get_user($user_guid);
 if (empty($authorized_users)) {
 	remove_entity_relationships($user->guid, POST_AS_RELATIONSHIP, true);
 	
-	system_message(elgg_echo('plugins:usersettings:save:ok', [$plugin_name]));
-	forward(REFERER);
+	return elgg_ok_response('', elgg_echo('plugins:usersettings:save:ok', [$plugin_name]));
 }
 
 $current_authorized = post_as_get_authorized_users($user->guid, true);
@@ -40,5 +39,4 @@ if (!empty($removed_authorized)) {
 	}
 }
 
-system_message(elgg_echo('plugins:usersettings:save:ok', [$plugin_name]));
-forward(REFERER);
+return elgg_ok_response('', elgg_echo('plugins:usersettings:save:ok', [$plugin_name]));

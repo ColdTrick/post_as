@@ -7,26 +7,23 @@ class Permissions {
 	/**
 	 * Give users edit rights on for granted users content
 	 *
-	 * @param string $hook   the name of the hook
-	 * @param string $type   the type of the hook
-	 * @param bool   $return current return value
-	 * @param array  $params supplied params
+	 * @param \Elgg\Hook $hook 'permissions_check', 'object'
 	 *
 	 * @return void|bool
 	 */
-	public static function canEdit($hook, $type, $return, $params) {
+	public static function canEdit(\Elgg\Hook $hook) {
+		
+		if ($hook->getValue()) {
+			// already has access
+			return;
+		}
 		
 		if (elgg_get_plugin_setting('allow_edit', 'post_as') !== 'yes') {
 			return;
 		}
 		
-		if ($return) {
-			// already has access
-			return;
-		}
-		
-		$entity = elgg_extract('entity', $params);
-		$user = elgg_extract('user', $params);
+		$entity = $hook->getEntityParam();
+		$user = $hook->getParam('user');
 		if (!$entity instanceof \ElggEntity || !$user instanceof \ElggUser) {
 			return;
 		}
