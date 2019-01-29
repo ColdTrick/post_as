@@ -14,3 +14,21 @@ Features
 
 - Authorize others to post on your behalf
 - Create content on somebody elses behalf
+
+Developers
+----------
+
+To get your plugin to support Post As register a plugin hook for `config` `post_as`
+
+The result is an array in the format:
+
+```php
+$result[
+	'<form_name>' => [
+		'type' => '<entity_type>',
+		'subtype' => '<entity_subtype>',
+		'action' => '<action>', // defaults to '<form_name>'
+		'extend_form' => true|false, // defaults to true, set to false if the form already contains the post_as/input view
+	],
+];
+```

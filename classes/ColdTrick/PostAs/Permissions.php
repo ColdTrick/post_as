@@ -7,7 +7,7 @@ class Permissions {
 	/**
 	 * Give users edit rights on for granted users content
 	 *
-	 * @param \Elgg\Hook $hook 'permissions_check', 'object'
+	 * @param \Elgg\Hook $hook 'permissions_check', 'all'
 	 *
 	 * @return void|bool
 	 */
@@ -33,11 +33,51 @@ class Permissions {
 			return;
 		}
 		
-		$posters = post_as_get_posters($user->guid, true);
-		if (empty($posters)) {
+		if (!post_as_is_supported($entity->getType(), $entity->getSubtype())) {
+			// type/subtype is not supported
 			return;
 		}
 		
-		return in_array($entity->owner_guid, $posters);
+		if (!post_as_is_authorized($entity->owner_guid, $user->guid)) {
+			// not authorized for this user
+			return;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Allow editors to write to containers
+	 *
+	 * @param \Elgg\Hook $hook 'container_permissions_check', 'all'
+	 *
+	 * @return void|true
+	 */
+	public static function canWriteToContainer(\Elgg\Hook $hook) {
+		
+		if ($hook->getValue()) {
+			// already allowed
+			return;
+		}
+		
+		$container = $hook->getParam('container');
+		$user = $hook->getParam('user');
+		$subtype = $hook->getParam('subtype');
+		if (!$container instanceof \ElggUser || !$user instanceof \ElggUser) {
+			// container needs to be a user
+			return;
+		}
+		
+		if (!post_as_is_supported($hook->getType(), $subtype)) {
+			// not supported for type/subtype
+			return;
+		}
+		
+		if (!post_as_is_authorized($container->guid, $user->guid)) {
+			// not autorized for this user
+			return;
+		}
+		
+		return true;
 	}
 }

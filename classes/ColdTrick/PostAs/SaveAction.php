@@ -19,8 +19,13 @@ class SaveAction {
 	public static function prepareAction(\Elgg\Hook $hook) {
 		
 		// check for new owner_guid
-		$post_as_owner_guid = (int) get_input('post_as_owner_guid');
-		if (empty($post_as_owner_guid)) {
+		$post_as_owner_guid = get_input('post_as_owner_guid');
+		if (is_array($post_as_owner_guid)) {
+			// global editors get userpicker which results in an array
+			$post_as_owner_guid = elgg_extract(0, $post_as_owner_guid);
+		}
+		$post_as_owner_guid = (int) $post_as_owner_guid;
+		if ($post_as_owner_guid < 1) {
 			return;
 		}
 		
@@ -68,12 +73,14 @@ class SaveAction {
 		
 		$session->setLoggedInUser($new_user);
 		
+		// register permissions
+		elgg_register_plugin_hook_handler('container_permissions_check', 'all', [$store, 'containerPermissions']);
+		
 		// register repair session function
 		elgg_register_event_handler('shutdown', 'system', [$store, 'restoreLoggedInUser'], 1);
 		
 		// register tracking function
-		// @todo support groups?
-		elgg_register_event_handler('create', 'object', [$store, 'trackPostAs']);
+		elgg_register_event_handler('create', 'all', [$store, 'trackPostAs']);
 	}
 	
 	/**
@@ -94,7 +101,7 @@ class SaveAction {
 	/**
 	 * Track that this entity was create on behalf of somebody else
 	 *
-	 * @param \Elgg\Event $event 'create', 'object'
+	 * @param \Elgg\Event $event 'create', 'all'
 	 *
 	 * @return void
 	 */
@@ -104,16 +111,65 @@ class SaveAction {
 			return;
 		}
 		
+		$entity = $event->getObject();
+		if (!$entity instanceof \ElggEntity) {
+			return;
+		}
+		
 		// clear sticky form
 		elgg_clear_sticky_form('post_as');
 		
-		$object = $event->getObject();
-		
-		// @todo make this configurable
-		if (!in_array($object->getSubtype(), ['blog', 'static'])) {
+		if (!post_as_is_supported($entity->getType(), $entity->getSubtype())) {
 			return;
 		}
 		
 		$object->post_as_actor = $this->user->guid;
+	}
+	
+	/**
+	 * Check permissions for original user when needed
+	 *
+	 * @return void|true
+	 */
+	public function containerPermissions(\Elgg\Hook $hook) {
+		
+		if ($hook->getValue()) {
+			// already allowed
+			return;
+		}
+		
+		if (!$this->user instanceof \ElggUser) {
+			// no idea how we got here
+			return;
+		}
+		
+		$container = $hook->getParam('container');
+		$user = $hook->getParam('user');
+		$subtype = $hook->getParam('subtype');
+		if (!$container instanceof \ElggGroup || !$user instanceof \ElggUser) {
+			return;
+		}
+		
+		if ($user->guid === $this->user->guid) {
+			// prevent recursion
+			return;
+		}
+		
+		if (!post_as_is_supported($hook->getType(), $subtype)) {
+			// not allowed for this type/subtype
+			return;
+		}
+		
+		if (!post_as_is_authorized($user->guid, $this->user->guid)) {
+			// user is not authorized, how did we get here
+			return;
+		}
+		
+		// check permissions of original user
+		if (!$container->canWriteToContainer($this->user->guid, $hook->getType(), $subtype)) {
+			return;
+		}
+		
+		return true;
 	}
 }

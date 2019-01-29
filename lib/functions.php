@@ -101,5 +101,99 @@ function post_as_is_authorized($post_as_guid, $user_guid = 0) {
 		return false;
 	}
 	
+	if (post_as_is_global_editor($user_guid)) {
+		return true;
+	}
+	
 	return (bool) check_entity_relationship($user_guid, POST_AS_RELATIONSHIP, $post_as_guid);
+}
+
+/**
+ * Check if the given user is a global editor
+ *
+ * @param int $user_guid the user_guid to check (default: current user)
+ *
+ * @return bool
+ */
+function post_as_is_global_editor($user_guid = 0) {
+	static $editors;
+	
+	$user_guid = (int) $user_guid;
+	if ($user_guid < 1) {
+		$user_guid = elgg_get_logged_in_user_guid();
+	}
+	
+	if ($user_guid < 1) {
+		return false;
+	}
+	
+	if (!isset($editors)) {
+		$editors = [];
+		
+		$setting = elgg_get_plugin_setting('editor_guids', 'post_as');
+		if (!empty($setting)) {
+			$editors = string_to_tag_array($setting);
+			
+			array_walk($editors, function(&$guid) {
+				$guid = (int) $guid;
+			});
+		}
+	}
+	
+	return in_array($user_guid, $editors);
+}
+
+/**
+ * Get the configuration for post as support
+ *
+ * @return array
+ */
+function post_as_get_config() {
+	$defaults = [
+		'blog/save' => [
+			'type' => 'object',
+			'subtype' => 'blog',
+		],
+		'static/edit' => [
+			'type' => 'object',
+			'subtype' => 'static',
+		],
+	];
+	
+	return elgg_trigger_plugin_hook('config', 'post_as', null, $defaults);
+}
+
+/**
+ * Check if post as is supported for the given type/subtype
+ *
+ * @param string $entity_type    the entity type to check
+ * @param string $entity_subtype the entity subtype to check
+ *
+ * @return bool
+ */
+function post_as_is_supported(string $entity_type, string $entity_subtype) {
+	
+	if (empty($entity_type) || empty($entity_subtype)) {
+		return false;
+	}
+	
+	$config = post_as_get_config();
+	if (empty($config) || !is_array($config)) {
+		return false;
+	}
+	
+	foreach ($config as $form => $settings) {
+		
+		if (elgg_extract('type', $settings) !== $entity_type) {
+			continue;
+		}
+		
+		if (elgg_extract('subtype', $settings) !== $entity_subtype) {
+			continue;
+		}
+		
+		return true;
+	}
+	
+	return false;
 }
