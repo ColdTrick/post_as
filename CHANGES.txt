@@ -1,6 +1,12 @@
 Version history
 ===============
 
+2.0 (2019-03-27):
+
+- added: global editors
+- changed: increased minimal Elgg version requirement to 3.0
+- changed: moved start.php to Bootstrap and elgg-plugin.php
+
 1.1 (2018-07-13):
 
 - added: option to show post_as input on edit forms
