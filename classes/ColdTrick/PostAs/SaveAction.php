@@ -123,7 +123,7 @@ class SaveAction {
 			return;
 		}
 		
-		$object->post_as_actor = $this->user->guid;
+		$entity->post_as_actor = $this->user->guid;
 	}
 	
 	/**
