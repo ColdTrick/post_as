@@ -77,7 +77,7 @@ class SaveAction {
 		elgg_register_plugin_hook_handler('container_permissions_check', 'all', [$store, 'containerPermissions']);
 		
 		// register repair session function
-		elgg_register_event_handler('shutdown', 'system', [$store, 'restoreLoggedInUser'], 1);
+		elgg_register_plugin_hook_handler('response', "action:{$hook->getType()}", [$store, 'restoreLoggedInUser'], 1);
 		
 		// register tracking function
 		elgg_register_event_handler('create', 'all', [$store, 'trackPostAs']);
