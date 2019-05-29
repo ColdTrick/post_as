@@ -1,6 +1,11 @@
 Version history
 ===============
 
+2.0.1 (2019-05-29):
+
+- fixed: recovery of original user failed
+- fixed: save post as actor on correct entity
+
 2.0 (2019-03-27):
 
 - added: global editors
