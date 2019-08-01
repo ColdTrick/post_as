@@ -3,7 +3,6 @@
 namespace ColdTrick\PostAs\Middleware;
 
 use Elgg\Request;
-use Elgg\Database\QueryBuilder;
 
 class PostAs {
 	
