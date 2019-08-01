@@ -51,13 +51,8 @@ class PostAs {
 	 */
 	public function addSqlSuffix(\Elgg\Hook $hook) {
 		
-		$qb = $hook->getParam('query_builder');
 		$guid_column = $hook->getParam('guid_column');
-		if (!$qb instanceof QueryBuilder || empty($guid_column)) {
-			return;
-		}
-		
-		if ($hook->getParam('ignore_access')) {
+		if (empty($guid_column) || $hook->getParam('ignore_access')) {
 			return;
 		}
 		
