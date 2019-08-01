@@ -8,6 +8,16 @@ class Bootstrap extends DefaultPluginBootstrap {
 	
 	/**
 	 * {@inheritDoc}
+	 * @see \Elgg\DefaultPluginBootstrap::boot()
+	 */
+	public function boot() {
+		$hooks = $this->elgg()->hooks;
+		
+		$hooks->registerHandler('route:config', 'all', __NAMESPACE__ . '\RouteConfig::addPostAsMiddleware');
+	}
+	
+	/**
+	 * {@inheritDoc}
 	 * @see \Elgg\DefaultPluginBootstrap::init()
 	 */
 	public function init() {
@@ -32,12 +42,13 @@ class Bootstrap extends DefaultPluginBootstrap {
 		
 		$hooks->registerHandler('container_permissions_check', 'all', __NAMESPACE__ . '\Permissions::canWriteToContainer');
 		$hooks->registerHandler('permissions_check', 'all', __NAMESPACE__ . '\Permissions::canEdit');
+		$hooks->registerHandler('register', 'menu:owner_block', __NAMESPACE__ . '\Menus\OwnerBlock::addPostedAs');
 		$hooks->registerHandler('setting', 'plugin', __NAMESPACE__ . '\PluginSettings::convertArrayToString');
 	}
 	
 	protected function proccessConfig() {
 		$config = post_as_get_config();
-		if (empty($config) || empty($config)) {
+		if (empty($config) || !is_array($config)) {
 			return;
 		}
 		

@@ -2,6 +2,9 @@
 
 return [
 	
+	// generic
+	'collection:post_as:owner' => "Posted as content",
+	
 	// plugin settings
 	'post_as:settings:can_edit' => "Allow authorized users to edit existing content",
 	'post_as:settings:can_edit:help' => "When enabled autorized users also get edit rights on all the content of the users they're authorized to post as for.",
@@ -19,4 +22,8 @@ Be sure to thrust the people you authorize.",
 	// form
 	'post_as:input:label' => "Post as",
 	'post_as:myself' => "Myself (%s)",
+	
+	// posted as
+	'post_as:menu:posted_as' => "Posted as",
+	'post_as:posted:no_results' => "You haven't created any content on behalf of somebody else",
 ];

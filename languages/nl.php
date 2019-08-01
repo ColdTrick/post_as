@@ -1,10 +1,13 @@
 <?php
 /**
- * This file was created by Translation Editor v7.0-beta
- * On 2019-01-29 16:23
+ * This file was created by Translation Editor v7.0.3
+ * On 2019-08-01 15:56
  */
 
 return array (
+  'post_as:menu:posted_as' => 'Gepubliceerd namens',
+  'post_as:posted:no_results' => 'Je hebt nog geen content gemaakt namens anderen',
+  'collection:post_as:owner' => 'Content gepubliceerd namens anderen',
   'post_as:settings:can_edit' => 'Geautoriseerde gebruikers mogen bestaande content bewerken',
   'post_as:settings:can_edit:help' => 'Indien dit is ingeschakeld mogen de gebruikers ook de content van de gebruikers waarvoor ze zijn geautoriseerd bewerken.',
   'post_as:settings:editors:title' => 'Redacteuren configuratie',
