@@ -26,7 +26,17 @@ class SaveAction {
 		}
 		$post_as_owner_guid = (int) $post_as_owner_guid;
 		if ($post_as_owner_guid < 1) {
-			return;
+			// not found for create, check edit
+			$guid = (int) get_input('guid');
+			
+			$entity = elgg_call(ELGG_IGNORE_ACCESS, function() use ($guid) {
+				return get_entity($guid);
+			});
+			if (!$entity instanceof \ElggEntity || !$entity->canEdit()) {
+				return;
+			}
+			
+			$post_as_owner_guid = $entity->owner_guid;
 		}
 		
 		// not current user
@@ -81,6 +91,7 @@ class SaveAction {
 		
 		// register tracking function
 		elgg_register_event_handler('create', 'all', [$store, 'trackPostAs']);
+		elgg_register_event_handler('update', 'all', [$store, 'trackPostAs']);
 	}
 	
 	/**
