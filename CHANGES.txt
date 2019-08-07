@@ -1,6 +1,11 @@
 Version history
 ===============
 
+2.1 (2019-08-07):
+
+- added: listing of created content on behalf of others
+- fixed: edit actions also acted on behalf of
+
 2.0.1 (2019-05-29):
 
 - fixed: recovery of original user failed
