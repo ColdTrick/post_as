@@ -13,7 +13,7 @@ class RouteConfig {
 	 *
 	 * @return array
 	 */
-	public static function addPostAsMiddleware (\Elgg\Hook $hook) {
+	public static function addPostAsMiddleware(\Elgg\Hook $hook) {
 		
 		$config = $hook->getValue();
 		
