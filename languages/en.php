@@ -23,6 +23,8 @@ Be sure to thrust the people you authorize.",
 	'post_as:input:label' => "Post as",
 	'post_as:myself' => "Myself (%s)",
 	
+	'post_as:output' => "Posted by: %s",
+	
 	// posted as
 	'post_as:menu:posted_as' => "Posted as",
 	'post_as:posted:no_results' => "You haven't created any content on behalf of somebody else",

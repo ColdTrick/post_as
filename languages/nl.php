@@ -6,6 +6,7 @@
 
 return array (
   'post_as:menu:posted_as' => 'Gepubliceerd namens',
+  'post_as:output' => "Gepubliceerd door: %s",
   'post_as:posted:no_results' => 'Je hebt nog geen content gemaakt namens anderen',
   'collection:post_as:owner' => 'Content gepubliceerd namens anderen',
   'post_as:settings:can_edit' => 'Geautoriseerde gebruikers mogen bestaande content bewerken',
