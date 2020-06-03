@@ -92,6 +92,8 @@ class SaveAction {
 		// register tracking function
 		elgg_register_event_handler('create', 'all', [$store, 'trackPostAs']);
 		elgg_register_event_handler('update', 'all', [$store, 'trackPostAs']);
+		elgg_register_event_handler('create', 'all', [$store, 'addPostAsUserToSubscribers']);
+		elgg_register_event_handler('update', 'all', [$store, 'addPostAsUserToSubscribers']);
 	}
 	
 	/**
@@ -112,7 +114,7 @@ class SaveAction {
 	/**
 	 * Track that this entity was create on behalf of somebody else
 	 *
-	 * @param \Elgg\Event $event 'create', 'all'
+	 * @param \Elgg\Event $event 'create|update', 'all'
 	 *
 	 * @return void
 	 */
@@ -135,6 +137,35 @@ class SaveAction {
 		}
 		
 		$entity->post_as_actor = $this->user->guid;
+	}
+	
+	/**
+	 * Add post as user to content subscribers
+	 *
+	 * @param \Elgg\Event $event 'create|update', 'all'
+	 *
+	 * @return void
+	 */
+	public function addPostAsUserToSubscribers(\Elgg\Event $event) {
+		
+		$entity = $event->getObject();
+		if (!$entity instanceof \ElggEntity) {
+			return;
+		}
+		
+		$post_as_guid = $entity->post_as_actor;
+		if (empty($post_as_guid)) {
+			return;
+		}
+		
+		$methods = elgg_get_notification_methods();
+		if (empty($methods)) {
+			return;
+		}
+		
+		foreach ($methods as $method) {
+			elgg_add_subscription($post_as_guid, $method, $entity->guid);
+		}
 	}
 	
 	/**
