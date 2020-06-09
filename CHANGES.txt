@@ -1,6 +1,11 @@
 Version history
 ===============
 
+2.2 (2020-06-09):
+
+- added: output view for posted as information
+- added: posted by user is added to content subscribers
+
 2.1.1 (2019-08-22):
 
 - several small chores/fixes
