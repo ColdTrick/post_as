@@ -3,8 +3,8 @@
  * List all content the user posted as somebody else
  */
 
-use Elgg\EntityNotFoundException;
-use Elgg\EntityPermissionsException;
+use Elgg\Exceptions\Http\EntityNotFoundException;
+use Elgg\Exceptions\Http\EntityPermissionsException;
 
 $user = elgg_get_page_owner_entity();
 if (!$user instanceof ElggUser) {
@@ -33,8 +33,6 @@ foreach ($config as $action => $pair) {
 }
 
 // build page elements
-$title = elgg_echo('collection:post_as:owner');
-
 $content = elgg_call(ELGG_IGNORE_ACCESS, function() use ($user, $type_subtype_pairs) {
 	return elgg_list_entities([
 		'type_subtype_pairs' => $type_subtype_pairs,
@@ -47,13 +45,9 @@ $content = elgg_call(ELGG_IGNORE_ACCESS, function() use ($user, $type_subtype_pa
 	]);
 });
 
-// build page
-$page = elgg_view_layout('default', [
-	'title' => $title,
+// draw page
+echo elgg_view_page(elgg_echo('collection:post_as:owner'), [
 	'content' => $content,
 	'filter_id' => 'post_as',
 	'filter_value' => 'owner',
 ]);
-
-// draw page
-echo elgg_view_page($title, $page);

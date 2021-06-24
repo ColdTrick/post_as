@@ -11,14 +11,11 @@
  *
  * @return ElggUser[]|int[]
  */
-function post_as_get_authorized_users($user_guid, $guid_only = false) {
+function post_as_get_authorized_users(int $user_guid, bool $guid_only = false): array {
 	
-	$user_guid = (int) $user_guid;
 	if ($user_guid < 1) {
 		return [];
 	}
-	
-	$guid_only = (bool) $guid_only;
 	
 	$options = [
 		'type' => 'user',
@@ -40,14 +37,13 @@ function post_as_get_authorized_users($user_guid, $guid_only = false) {
 /**
  * Get all the users the given user_guid is authorized to post on behalf of
  *
- * @param int $user_guid the user to fetch for (default: current user)
+ * @param int  $user_guid the user to fetch for (default: current user)
+ * @param bool $guid_only return only guids
  *
  * @return ElggUser[]|int[]
  */
-function post_as_get_posters($user_guid = 0, $guid_only = false) {
+function post_as_get_posters(int $user_guid = 0, bool $guid_only = false): array {
 	
-	$guid_only = (bool) $guid_only;
-	$user_guid = (int) $user_guid;
 	if ($user_guid < 1) {
 		$user_guid = elgg_get_logged_in_user_guid();
 	}
@@ -84,10 +80,7 @@ function post_as_get_posters($user_guid = 0, $guid_only = false) {
  *
  * @return bool
  */
-function post_as_is_authorized($post_as_guid, $user_guid = 0) {
-	
-	$post_as_guid = (int) $post_as_guid;
-	$user_guid = (int) $user_guid;
+function post_as_is_authorized(int $post_as_guid, int $user_guid = 0): bool {
 	
 	if ($post_as_guid < 1) {
 		return false;
@@ -115,10 +108,9 @@ function post_as_is_authorized($post_as_guid, $user_guid = 0) {
  *
  * @return bool
  */
-function post_as_is_global_editor($user_guid = 0) {
+function post_as_is_global_editor(int $user_guid = 0): bool {
 	static $editors;
 	
-	$user_guid = (int) $user_guid;
 	if ($user_guid < 1) {
 		$user_guid = elgg_get_logged_in_user_guid();
 	}
@@ -148,7 +140,7 @@ function post_as_is_global_editor($user_guid = 0) {
  *
  * @return array
  */
-function post_as_get_config() {
+function post_as_get_config(): array {
 	$defaults = [
 		'blog/save' => [
 			'type' => 'object',
@@ -171,7 +163,7 @@ function post_as_get_config() {
  *
  * @return bool
  */
-function post_as_is_supported(string $entity_type, string $entity_subtype) {
+function post_as_is_supported(string $entity_type, string $entity_subtype): bool {
 	
 	if (empty($entity_type) || empty($entity_subtype)) {
 		return false;

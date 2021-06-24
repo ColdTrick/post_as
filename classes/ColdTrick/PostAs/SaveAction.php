@@ -163,9 +163,7 @@ class SaveAction {
 			return;
 		}
 		
-		foreach ($methods as $method) {
-			elgg_add_subscription($post_as_guid, $method, $entity->guid);
-		}
+		$entity->addSubscription($post_as_guid, array_values($methods));
 	}
 	
 	/**

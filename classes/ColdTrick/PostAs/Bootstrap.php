@@ -8,7 +8,6 @@ class Bootstrap extends DefaultPluginBootstrap {
 	
 	/**
 	 * {@inheritDoc}
-	 * @see \Elgg\DefaultPluginBootstrap::boot()
 	 */
 	public function boot() {
 		$hooks = $this->elgg()->hooks;
@@ -18,46 +17,23 @@ class Bootstrap extends DefaultPluginBootstrap {
 	
 	/**
 	 * {@inheritDoc}
-	 * @see \Elgg\DefaultPluginBootstrap::init()
-	 */
-	public function init() {
-		$this->registerHooks();
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * @see \Elgg\DefaultPluginBootstrap::ready()
 	 */
 	public function ready() {
 		$this->proccessConfig();
 	}
 	
 	/**
-	 * Register plugin hooks
+	 * Get the post as configuration and process the configuration
 	 *
 	 * @return void
 	 */
-	protected function registerHooks() {
+	protected function proccessConfig(): void {
 		$hooks = $this->elgg()->hooks;
 		
-		$hooks->registerHandler('container_permissions_check', 'all', __NAMESPACE__ . '\Permissions::canWriteToContainer');
-		$hooks->registerHandler('permissions_check', 'all', __NAMESPACE__ . '\Permissions::canEdit');
-		$hooks->registerHandler('register', 'menu:owner_block', __NAMESPACE__ . '\Menus\OwnerBlock::addPostedAs');
-		$hooks->registerHandler('setting', 'plugin', __NAMESPACE__ . '\PluginSettings::convertArrayToString');
-	}
-	
-	protected function proccessConfig() {
 		$config = post_as_get_config();
-		if (empty($config) || !is_array($config)) {
-			return;
-		}
-		
-		$hooks = $this->elgg()->hooks;
-		
 		foreach ($config as $form_name => $settings) {
-			
 			// extend form (if needed)
-			if (elgg_extract('extend_form', $settings, true)) {
+			if ((bool) elgg_extract('extend_form', $settings, true)) {
 				elgg_extend_view("forms/{$form_name}", 'post_as/input');
 			}
 			

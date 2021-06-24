@@ -3,7 +3,7 @@
 $plugin_id = get_input('plugin_id');
 
 $plugin = elgg_get_plugin_from_id($plugin_id);
-$plugin_name = $plugin->getManifest()->getName();
+$plugin_name = $plugin->getDisplayName();
 
 $user_guid = (int) get_input('user_guid');
 
