@@ -158,12 +158,13 @@ class SaveAction {
 			return;
 		}
 		
-		$methods = elgg_get_notification_methods();
-		if (empty($methods)) {
+		$content_preferences = $this->user->getNotificationSettings('content_create');
+		$enabled_methods = array_keys(array_filter($content_preferences));
+		if (empty($enabled_methods)) {
 			return;
 		}
 		
-		$entity->addSubscription($post_as_guid, array_values($methods));
+		$entity->addSubscription($post_as_guid, $enabled_methods);
 	}
 	
 	/**
