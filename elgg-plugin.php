@@ -11,7 +11,7 @@ require_once(__DIR__ . '/lib/functions.php');
 
 return [
 	'plugin' => [
-		'version' => '3.0',
+		'version' => '3.0.1',
 	],
 	'bootstrap' => Bootstrap::class,
 	'actions' => [
