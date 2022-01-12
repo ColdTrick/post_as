@@ -57,6 +57,12 @@ function post_as_get_posters(int $user_guid = 0, bool $guid_only = false): array
 		'limit' => false,
 		'relationship' => POST_AS_RELATIONSHIP,
 		'relationship_guid' => $user_guid,
+		'metadata_name_value_pairs' => [
+			[
+				'name' => 'banned',
+				'value' => 'no',
+			],
+		],
 	];
 	if ($guid_only) {
 		$options['callback'] = function($row) {
