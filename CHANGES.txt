@@ -1,6 +1,10 @@
 Version history
 ===============
 
+3.0.2 (2022-01-27):
+
+- fixed: don't allow post as a banned user
+
 3.0.1 (2021-10-27):
 
 - changed: use content create notification preferences for subscription
