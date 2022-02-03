@@ -1,11 +1,15 @@
 <?php
 
 $plugin_id = get_input('plugin_id');
+$user_guid = (int) get_input('user_guid', elgg_get_logged_in_user_guid());
+if (empty($plugin_id) || empty($user_guid)) {
+	return elgg_error_response(elgg_echo('error:missing_data'));
+}
 
 $plugin = elgg_get_plugin_from_id($plugin_id);
 $plugin_name = $plugin->getDisplayName();
 
-$user_guid = (int) get_input('user_guid');
+$user = get_user($user_guid);
 
 $authorized_users = (array) get_input('authorized_users');
 array_walk($authorized_users, function(&$value) {
@@ -14,8 +18,6 @@ array_walk($authorized_users, function(&$value) {
 $authorized_users = array_filter($authorized_users, function ($value) {
 	return (int) $value > 0;
 });
-
-$user = get_user($user_guid);
 
 if (empty($authorized_users)) {
 	remove_entity_relationships($user->guid, POST_AS_RELATIONSHIP, true);
