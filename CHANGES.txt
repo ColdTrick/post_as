@@ -1,6 +1,10 @@
 Version history
 ===============
 
+3.0.3 (2022-02-16):
+
+- several small chores/fixes
+
 3.0.2 (2022-01-27):
 
 - fixed: don't allow post as a banned user
