@@ -19,6 +19,7 @@ class PostAs {
 	 * @return void
 	 */
 	public function __invoke(Request $request) {
+		
 		$user = elgg_get_logged_in_user_entity();
 		if (!$user instanceof \ElggUser || $user->isAdmin()) {
 			// no user, or admin which already has access
@@ -29,6 +30,11 @@ class PostAs {
 			return $request->getEntityParam();
 		});
 		if (!$entity instanceof \ElggEntity) {
+			return;
+		}
+		
+		if (!post_as_is_authorized($entity->owner_guid, $user->guid)) {
+			// make sure the user is a post_as user (this will prevent group owners from accessing private group data)
 			return;
 		}
 		
