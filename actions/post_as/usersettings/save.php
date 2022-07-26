@@ -20,7 +20,7 @@ $authorized_users = array_filter($authorized_users, function ($value) {
 });
 
 if (empty($authorized_users)) {
-	remove_entity_relationships($user->guid, POST_AS_RELATIONSHIP, true);
+	$user->removeAllRelationships(POST_AS_RELATIONSHIP, true);
 	
 	return elgg_ok_response('', elgg_echo('plugins:usersettings:save:ok', [$plugin_name]));
 }
@@ -30,14 +30,23 @@ $current_authorized = post_as_get_authorized_users($user->guid, true);
 $new_authorized = array_diff($authorized_users, $current_authorized);
 if (!empty($new_authorized)) {
 	foreach ($new_authorized as $authorized_guid) {
-		add_entity_relationship($authorized_guid, POST_AS_RELATIONSHIP, $user->guid);
+		$authorized = get_user($authorized_guid);
+		if (!$authorized instanceof \ElggUser) {
+			continue;
+		}
+		
+		$authorized->addRelationship($user->guid, POST_AS_RELATIONSHIP);
 	}
 }
 
 $removed_authorized = array_diff($current_authorized, $authorized_users);
 if (!empty($removed_authorized)) {
-	foreach ($removed_authorized as $no_longer_authorized) {
-		remove_entity_relationship($no_longer_authorized, POST_AS_RELATIONSHIP, $user->guid);
+	foreach ($removed_authorized as $no_longer_authorized_guid) {
+		$no_longer_authorized = get_user($no_longer_authorized_guid);
+		if (!$no_longer_authorized instanceof \ElggUser) {
+			continue;
+		}
+		$no_longer_authorized->removeRelationship($user->guid, POST_AS_RELATIONSHIP);
 	}
 }
 

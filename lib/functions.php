@@ -69,8 +69,8 @@ function post_as_get_posters(int $user_guid = 0, bool $guid_only = false): array
 			return (int) $row->guid;
 		};
 	} else {
-		$options['order_by_metadata'] = [
-			'name' => 'name',
+		$options['sort_by'] = [
+			'property' => 'name',
 			'direction' => 'ASC',
 		];
 	}
@@ -104,7 +104,12 @@ function post_as_is_authorized(int $post_as_guid, int $user_guid = 0): bool {
 		return true;
 	}
 	
-	return (bool) check_entity_relationship($user_guid, POST_AS_RELATIONSHIP, $post_as_guid);
+	$user = get_user($user_guid);
+	if (!$user instanceof \ElggUser) {
+		return false;
+	}
+	
+	return $user->hasRelationship($post_as_guid, POST_AS_RELATIONSHIP);
 }
 
 /**
@@ -128,9 +133,9 @@ function post_as_is_global_editor(int $user_guid = 0): bool {
 	if (!isset($editors)) {
 		$editors = [];
 		
-		$setting = elgg_get_plugin_setting('editor_guids', 'post_as');
+		$setting = (string) elgg_get_plugin_setting('editor_guids', 'post_as');
 		if (!empty($setting)) {
-			$editors = string_to_tag_array($setting);
+			$editors = elgg_string_to_array($setting);
 			
 			array_walk($editors, function(&$guid) {
 				$guid = (int) $guid;

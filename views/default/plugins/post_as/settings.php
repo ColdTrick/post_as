@@ -24,7 +24,7 @@ $editors .= elgg_view_field([
 	'#label' => elgg_echo('post_as:settings:editors'),
 	'#help' => elgg_echo('post_as:settings:editors:help'),
 	'name' => 'params[editor_guids]',
-	'values' => $plugin->editor_guids ? string_to_tag_array($plugin->editor_guids) : null,
+	'values' => $plugin->editor_guids ? elgg_string_to_array((string) $plugin->editor_guids) : null,
 	'show_friends' => false,
 ]);
 
