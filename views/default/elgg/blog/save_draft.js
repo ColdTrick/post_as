@@ -1,5 +1,7 @@
 /**
  * Save draft through ajax
+ * 
+ * ColdTrick 2022-08-16: don't save drafts as this causes issues with the post as functionality
  */
 define(['jquery', 'elgg/Ajax', 'elgg/i18n'], function($, Ajax, i18n) {
 	
@@ -27,6 +29,7 @@ define(['jquery', 'elgg/Ajax', 'elgg/i18n'], function($, Ajax, i18n) {
 	};
 
 	var saveDraft = function() {
+		return false;
 		var ajax = new Ajax(false);
 		
 		var formData = ajax.objectify('form.elgg-form-blog-save');
@@ -68,7 +71,7 @@ define(['jquery', 'elgg/Ajax', 'elgg/i18n'], function($, Ajax, i18n) {
 	});
 
 	// start auto save interval
-	setInterval(saveDraft, 60000);
+	//setInterval(saveDraft, 60000);
 
 	return {
 		saveDraft: saveDraft

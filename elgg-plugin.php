@@ -12,6 +12,9 @@ require_once(__DIR__ . '/lib/functions.php');
 return [
 	'plugin' => [
 		'version' => '3.0.4',
+		'dependencies' => [
+			'blog' => ['position' => 'after'],
+		],
 	],
 	'bootstrap' => Bootstrap::class,
 	'actions' => [
