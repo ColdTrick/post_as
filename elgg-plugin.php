@@ -13,7 +13,10 @@ return [
 	'plugin' => [
 		'version' => '3.0.4',
 		'dependencies' => [
-			'blog' => ['position' => 'after'],
+			'blog' => [
+				'must_be_active' => false,
+				'position' => 'after',
+			],
 		],
 	],
 	'bootstrap' => Bootstrap::class,
