@@ -11,7 +11,7 @@ require_once(__DIR__ . '/lib/functions.php');
 
 return [
 	'plugin' => [
-		'version' => '3.0.4',
+		'version' => '4.0',
 		'dependencies' => [
 			'blog' => [
 				'must_be_active' => false,
