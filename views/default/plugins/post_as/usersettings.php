@@ -5,9 +5,29 @@ if (!$page_owner->canEdit()) {
 	return;
 }
 
-/* @var $plugin ElggPlugin */
+/* @var $plugin \ElggPlugin */
 $plugin = elgg_extract('entity', $vars);
 
+// other users who have authorized this user
+if (post_as_is_global_editor($page_owner->guid)) {
+	echo elgg_view_message('info', elgg_echo('post_as:usersettings:global_editor'));
+} else {
+	$list = elgg_list_relationships([
+		'type' => 'user',
+		'limit' => false,
+		'relationship' => POST_AS_RELATIONSHIP,
+		'relationship_guid' => $page_owner->guid,
+	]);
+	if (!empty($list)) {
+		echo elgg_view('output/longtext', [
+			'value' => elgg_echo('post_as:usersettings:authorized_by'),
+		]);
+		
+		echo $list;
+	}
+}
+
+// allow this user to authorize others
 echo elgg_view('output/longtext', [
 	'value' => elgg_echo('post_as:usersettings:description'),
 ]);

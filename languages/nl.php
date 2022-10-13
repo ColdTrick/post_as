@@ -1,12 +1,15 @@
 <?php
 /**
- * This file was created by Translation Editor v7.0.3
- * On 2019-08-01 15:56
+ * This file was created by Translation Editor v11.0
+ * On 2022-10-13 11:07
  */
 
 return array (
+  'relationship:can_post_as' => '%s kan publiceren namens %s',
+  'post_as:usersettings:global_editor' => 'Een site beheerder heeft je geautoriseerd om content te publiceren namens alle leden van de community.',
+  'post_as:usersettings:authorized_by' => 'De volgende gebruikers hebben jou geautoriseerd om content namens hum te mogen publiceren.',
   'post_as:menu:posted_as' => 'Gepubliceerd namens',
-  'post_as:output' => "Gepubliceerd door: %s",
+  'post_as:output' => 'Gepubliceerd door: %s',
   'post_as:posted:no_results' => 'Je hebt nog geen content gemaakt namens anderen',
   'collection:post_as:owner' => 'Content gepubliceerd namens anderen',
   'post_as:settings:can_edit' => 'Geautoriseerde gebruikers mogen bestaande content bewerken',

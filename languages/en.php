@@ -4,6 +4,7 @@ return [
 	
 	// generic
 	'collection:post_as:owner' => "Posted as content",
+	'relationship:can_post_as' => "%s can post on behalf of %s",
 	
 	// plugin settings
 	'post_as:settings:can_edit' => "Allow authorized users to edit existing content",
@@ -15,6 +16,8 @@ return [
 	'post_as:settings:editors:help' => "Search for a user by name or username and select it from the list",
 	
 	// user plugin settings
+	'post_as:usersettings:global_editor' => "A site administrator has authorized you to post on behalf of every community member.",
+	'post_as:usersettings:authorized_by' => "The following users have authorized you to post content on their behalf.",
 	'post_as:usersettings:description' => "Below you can authorize other members of the site to post content on your behalf.
 Be sure to thrust the people you authorize.",
 	'post_as:usersettings:authorized_users' => "Authorized members to post on your behalf",
