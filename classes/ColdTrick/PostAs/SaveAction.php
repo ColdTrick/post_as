@@ -69,8 +69,7 @@ class SaveAction {
 				}
 				
 				// make sure this is the new owner/container
-				$request = _elgg_services()->request;
-				$request->query->set('container_guid', $post_as_owner_guid);
+				set_input('container_guid', $post_as_owner_guid);
 			});
 		}
 		
