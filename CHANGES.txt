@@ -1,6 +1,11 @@
 Version history
 ===============
 
+4.1 (2022-10-27):
+
+- added: list of users who granted post as permissions
+- fixed: set correct container in action
+
 4.0 (2022-08-24):
 
 - changed: updated for Elgg 4.3
