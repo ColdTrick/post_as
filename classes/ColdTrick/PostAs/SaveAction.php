@@ -79,8 +79,8 @@ class SaveAction {
 		
 		// set new session user
 		$session = elgg_get_session();
-		
 		$session->setLoggedInUser($new_user);
+		$session->set('post_as_original_user', $store->user->guid);
 		
 		// register permissions
 		elgg_register_plugin_hook_handler('container_permissions_check', 'all', [$store, 'containerPermissions']);
@@ -108,6 +108,7 @@ class SaveAction {
 		
 		$session = elgg_get_session();
 		$session->setLoggedInUser($this->user);
+		$session->remove('post_as_original_user');
 	}
 	
 	/**

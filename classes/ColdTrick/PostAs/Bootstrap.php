@@ -13,6 +13,8 @@ class Bootstrap extends DefaultPluginBootstrap {
 		$hooks = $this->elgg()->hooks;
 		
 		$hooks->registerHandler('route:config', 'all', __NAMESPACE__ . '\RouteConfig::addPostAsMiddleware');
+		
+		$this->validateSession();
 	}
 	
 	/**
@@ -41,5 +43,36 @@ class Bootstrap extends DefaultPluginBootstrap {
 			$action = elgg_extract('action', $settings, $form_name);
 			$hooks->registerHandler('action:validate', $action, __NAMESPACE__ . '\SaveAction::prepareAction');
 		}
+	}
+	
+	/**
+	 * Make sure the correct user is logged in
+	 *
+	 * This could happen if during the action a fatal error occurred which prevented the recovery of the original user
+	 *
+	 * @return void
+	 */
+	protected function validateSession(): void {
+		$session = $this->elgg()->session;
+		if (!$session->has('post_as_original_user')) {
+			return;
+		}
+		
+		$original_user_guid = (int) $session->get('post_as_original_user');
+		$original_user = get_user($original_user_guid);
+		if (!$original_user instanceof \ElggUser) {
+			$session->remove('post_as_original_user');
+			return;
+		}
+		
+		if ($session->getLoggedInUserGuid() === $original_user->guid) {
+			// how did we get here?
+			$session->remove('post_as_original_user');
+			return;
+		}
+		
+		// restore correct user
+		$session->setLoggedInUser($original_user);
+		$session->remove('post_as_original_user');
 	}
 }
