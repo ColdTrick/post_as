@@ -4,28 +4,30 @@ namespace ColdTrick\PostAs\Menus;
 
 use Elgg\Menu\MenuItems;
 
+/**
+ * Add menu items to the owner_block menu
+ */
 class OwnerBlock {
 	
 	/**
-	 * Add a menu item to the owner lock of a user
+	 * Add a menu item to the owner block of a user
 	 *
-	 * @param \Elgg\Hook $hook 'register', 'menu:owner_block'
+	 * @param \Elgg\Event $event 'register', 'menu:owner_block'
 	 *
-	 * @return void|MenuItems
+	 * @return null|MenuItems
 	 */
-	public static function addPostedAs(\Elgg\Hook $hook) {
-		
-		$entity = $hook->getEntityParam();
+	public static function addPostedAs(\Elgg\Event $event): ?MenuItems {
+		$entity = $event->getEntityParam();
 		if (!$entity instanceof \ElggUser || !$entity->canEdit()) {
-			return;
+			return null;
 		}
 		
 		if (elgg_get_plugin_setting('allow_edit', 'post_as') !== 'yes') {
-			return;
+			return null;
 		}
 
 		/* @var $result MenuItems */
-		$result = $hook->getValue();
+		$result = $event->getValue();
 		
 		$result[] = \ElggMenuItem::factory([
 			'name' => 'posted_as',

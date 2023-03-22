@@ -4,20 +4,22 @@ namespace ColdTrick\PostAs;
 
 use ColdTrick\PostAs\Middleware\PostAs;
 
+/**
+ * Route configuration event listener
+ */
 class RouteConfig {
 
 	/**
 	 * Add middleware to all routes
 	 *
-	 * @param \Elgg\Hook $hook 'route:config', 'all'
+	 * @param \Elgg\Event $event 'route:config', 'all'
 	 *
 	 * @return array
 	 */
-	public static function addPostAsMiddleware(\Elgg\Hook $hook) {
+	public static function addPostAsMiddleware(\Elgg\Event $event): array {
+		$config = $event->getValue();
 		
-		$config = $hook->getValue();
-		
-		$middleware = elgg_extract('middleware', $config, []);
+		$middleware = (array) elgg_extract('middleware', $config, []);
 		
 		$middleware[] = PostAs::class;
 		

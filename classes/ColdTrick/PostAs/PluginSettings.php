@@ -2,26 +2,28 @@
 
 namespace ColdTrick\PostAs;
 
+/**
+ * Plugin setting event listener
+ */
 class PluginSettings {
 	
 	/**
 	 * Convert arrays to a comma separated string so the plugin setting can be saved
 	 *
-	 * @param \Elgg\Hook $hook 'setting', 'plugin'
+	 * @param \Elgg\Event $event 'setting', 'plugin'
 	 *
-	 * @return void|string
+	 * @return null|string
 	 */
-	public static function convertArrayToString(\Elgg\Hook $hook) {
-		
-		if ($hook->getParam('plugin_id') !== 'post_as') {
+	public static function convertArrayToString(\Elgg\Event $event): ?string {
+		if ($event->getParam('plugin_id') !== 'post_as') {
 			// not correct plugin
-			return;
+			return null;
 		}
 		
-		$value = $hook->getValue();
+		$value = $event->getValue();
 		if (!is_array($value)) {
 			// not an array
-			return;
+			return null;
 		}
 		
 		$value = array_unique($value);

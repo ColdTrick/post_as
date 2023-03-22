@@ -12,7 +12,6 @@
  * @return ElggUser[]|int[]
  */
 function post_as_get_authorized_users(int $user_guid, bool $guid_only = false): array {
-	
 	if ($user_guid < 1) {
 		return [];
 	}
@@ -43,7 +42,6 @@ function post_as_get_authorized_users(int $user_guid, bool $guid_only = false): 
  * @return ElggUser[]|int[]
  */
 function post_as_get_posters(int $user_guid = 0, bool $guid_only = false): array {
-	
 	if ($user_guid < 1) {
 		$user_guid = elgg_get_logged_in_user_guid();
 	}
@@ -87,7 +85,6 @@ function post_as_get_posters(int $user_guid = 0, bool $guid_only = false): array
  * @return bool
  */
 function post_as_is_authorized(int $post_as_guid, int $user_guid = 0): bool {
-	
 	if ($post_as_guid < 1) {
 		return false;
 	}
@@ -163,7 +160,7 @@ function post_as_get_config(): array {
 		],
 	];
 	
-	return elgg_trigger_plugin_hook('config', 'post_as', null, $defaults);
+	return elgg_trigger_event_results('config', 'post_as', [], $defaults);
 }
 
 /**
@@ -175,18 +172,16 @@ function post_as_get_config(): array {
  * @return bool
  */
 function post_as_is_supported(string $entity_type, string $entity_subtype): bool {
-	
 	if (empty($entity_type) || empty($entity_subtype)) {
 		return false;
 	}
 	
 	$config = post_as_get_config();
-	if (empty($config) || !is_array($config)) {
+	if (empty($config)) {
 		return false;
 	}
 	
 	foreach ($config as $form => $settings) {
-		
 		if (elgg_extract('type', $settings) !== $entity_type) {
 			continue;
 		}

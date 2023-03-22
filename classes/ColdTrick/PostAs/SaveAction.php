@@ -2,28 +2,28 @@
 
 namespace ColdTrick\PostAs;
 
+/**
+ * Generic action listener
+ */
 class SaveAction {
 
-	/**
-	 * @var \ElggUser
-	 */
-	protected $user;
+	protected ?\ElggUser $user;
 	
 	/**
 	 * Prepare an action for post as
 	 *
-	 * @param \Elgg\Hook $hook 'action:validate', '<action name>'
+	 * @param \Elgg\Event $event 'action:validate', '<action name>'
 	 *
 	 * @return void
 	 */
-	public static function prepareAction(\Elgg\Hook $hook) {
-		
+	public static function prepareAction(\Elgg\Event $event): void {
 		// check for new owner_guid
 		$post_as_owner_guid = get_input('post_as_owner_guid');
 		if (is_array($post_as_owner_guid)) {
 			// global editors get userpicker which results in an array
 			$post_as_owner_guid = elgg_extract(0, $post_as_owner_guid);
 		}
+		
 		$post_as_owner_guid = (int) $post_as_owner_guid;
 		if ($post_as_owner_guid < 1) {
 			// not found for create, check edit
@@ -79,14 +79,16 @@ class SaveAction {
 		
 		// set new session user
 		$session = elgg_get_session();
-		$session->setLoggedInUser($new_user);
+		$session_manager = elgg()->session_manager;
+		
 		$session->set('post_as_original_user', $store->user->guid);
+		$session_manager->setLoggedInUser($new_user);
 		
 		// register permissions
-		elgg_register_plugin_hook_handler('container_permissions_check', 'all', [$store, 'containerPermissions']);
+		elgg_register_event_handler('container_permissions_check', 'all', [$store, 'containerPermissions']);
 		
 		// register repair session function
-		elgg_register_plugin_hook_handler('response', "action:{$hook->getType()}", [$store, 'restoreLoggedInUser'], 1);
+		elgg_register_event_handler('response', "action:{$event->getType()}", [$store, 'restoreLoggedInUser'], 1);
 		
 		// register tracking function
 		elgg_register_event_handler('create', 'all', [$store, 'trackPostAs']);
@@ -96,30 +98,30 @@ class SaveAction {
 	}
 	
 	/**
-	 * Restore the logged in user to the user before the action
+	 * Restore the logged-in user to the user before the action
 	 *
 	 * @return void
 	 */
-	public function restoreLoggedInUser() {
-		
+	public function restoreLoggedInUser(): void {
 		if (!$this->user instanceof \ElggUser) {
 			return;
 		}
 		
 		$session = elgg_get_session();
-		$session->setLoggedInUser($this->user);
+		$session_manager = elgg()->session_manager;
+		
 		$session->remove('post_as_original_user');
+		$session_manager->setLoggedInUser($this->user);
 	}
 	
 	/**
-	 * Track that this entity was create on behalf of somebody else
+	 * Track that this entity was created on behalf of somebody else
 	 *
 	 * @param \Elgg\Event $event 'create|update', 'all'
 	 *
 	 * @return void
 	 */
-	public function trackPostAs(\Elgg\Event $event) {
-		
+	public function trackPostAs(\Elgg\Event $event): void {
 		if (!$this->user instanceof \ElggUser) {
 			return;
 		}
@@ -146,8 +148,7 @@ class SaveAction {
 	 *
 	 * @return void
 	 */
-	public function addPostAsUserToSubscribers(\Elgg\Event $event) {
-		
+	public function addPostAsUserToSubscribers(\Elgg\Event $event): void {
 		$entity = $event->getObject();
 		if (!$entity instanceof \ElggEntity) {
 			return;
@@ -170,45 +171,46 @@ class SaveAction {
 	/**
 	 * Check permissions for original user when needed
 	 *
-	 * @return void|true
+	 * @param \Elgg\Event $event 'container_permissions_check', 'all'
+	 *
+	 * @return null|bool
 	 */
-	public function containerPermissions(\Elgg\Hook $hook) {
-		
-		if ($hook->getValue()) {
+	public function containerPermissions(\Elgg\Event $event): ?bool {
+		if ($event->getValue()) {
 			// already allowed
-			return;
+			return null;
 		}
 		
 		if (!$this->user instanceof \ElggUser) {
 			// no idea how we got here
-			return;
+			return null;
 		}
 		
-		$container = $hook->getParam('container');
-		$user = $hook->getParam('user');
-		$subtype = $hook->getParam('subtype');
+		$container = $event->getParam('container');
+		$user = $event->getParam('user');
+		$subtype = $event->getParam('subtype');
 		if (!$container instanceof \ElggGroup || !$user instanceof \ElggUser) {
-			return;
+			return null;
 		}
 		
 		if ($user->guid === $this->user->guid) {
 			// prevent recursion
-			return;
+			return null;
 		}
 		
-		if (!post_as_is_supported($hook->getType(), $subtype)) {
+		if (!post_as_is_supported($event->getType(), $subtype)) {
 			// not allowed for this type/subtype
-			return;
+			return null;
 		}
 		
 		if (!post_as_is_authorized($user->guid, $this->user->guid)) {
 			// user is not authorized, how did we get here
-			return;
+			return null;
 		}
 		
 		// check permissions of original user
-		if (!$container->canWriteToContainer($this->user->guid, $hook->getType(), $subtype)) {
-			return;
+		if (!$container->canWriteToContainer($this->user->guid, $event->getType(), $subtype)) {
+			return null;
 		}
 		
 		return true;

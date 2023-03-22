@@ -3,20 +3,17 @@
  * List all content the user posted as somebody else
  */
 
-use Elgg\Exceptions\Http\EntityNotFoundException;
 use Elgg\Exceptions\Http\EntityPermissionsException;
 
+/* @var $user \ElggUser */
 $user = elgg_get_page_owner_entity();
-if (!$user instanceof ElggUser) {
-	throw new EntityNotFoundException();
-}
 
-if (!$user->canEdit() || elgg_get_plugin_setting('allow_edit', 'post_as') !== 'yes') {
+if (elgg_get_plugin_setting('allow_edit', 'post_as') !== 'yes') {
 	throw new EntityPermissionsException();
 }
 
 $config = post_as_get_config();
-if (empty($config) || !is_array($config)) {
+if (empty($config)) {
 	throw new EntityPermissionsException();
 }
 

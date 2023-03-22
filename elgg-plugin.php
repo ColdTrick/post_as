@@ -1,7 +1,7 @@
 <?php
 
 use ColdTrick\PostAs\Bootstrap;
-use Elgg\Router\Middleware\Gatekeeper;
+use Elgg\Router\Middleware\UserPageOwnerCanEditGatekeeper;
 
 if (!defined('POST_AS_RELATIONSHIP')) {
 	define('POST_AS_RELATIONSHIP', 'can_post_as');
@@ -23,7 +23,7 @@ return [
 	'actions' => [
 		'post_as/usersettings/save' => [],
 	],
-	'hooks' => [
+	'events' => [
 		'container_permissions_check' => [
 			'all' => [
 				'\ColdTrick\PostAs\Permissions::canWriteToContainer' => [],
@@ -50,7 +50,7 @@ return [
 			'path' => '/post_as/owner/{username}',
 			'resource' => 'post_as/owner',
 			'middleware' => [
-				Gatekeeper::class,
+				UserPageOwnerCanEditGatekeeper::class,
 			],
 		],
 	],

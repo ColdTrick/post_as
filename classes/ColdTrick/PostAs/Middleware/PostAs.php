@@ -4,12 +4,12 @@ namespace ColdTrick\PostAs\Middleware;
 
 use Elgg\Request;
 
+/**
+ * PostAs Middleware
+ */
 class PostAs {
 	
-	/**
-	 * @var int
-	 */
-	private $entity_guid;
+	protected int $entity_guid;
 	
 	/**
 	 * Check if a special access suffix is needed for this route
@@ -18,8 +18,7 @@ class PostAs {
 	 *
 	 * @return void
 	 */
-	public function __invoke(Request $request) {
-		
+	public function __invoke(Request $request): void {
 		$user = elgg_get_logged_in_user_entity();
 		if (!$user instanceof \ElggUser || $user->isAdmin()) {
 			// no user, or admin which already has access
@@ -44,27 +43,26 @@ class PostAs {
 		
 		$this->entity_guid = $entity->guid;
 		
-		$request->elgg()->hooks->registerHandler('get_sql', 'access', [$this, 'addSqlSuffix']);
+		$request->elgg()->events->registerHandler('get_sql', 'access', [$this, 'addSqlSuffix']);
 	}
 	
 	/**
 	 * Add sql suffix so the current user is allowed to fetch (private) entities
 	 *
-	 * @param \Elgg\Hook $hook 'get_sql', 'access'
+	 * @param \Elgg\Event $event 'get_sql', 'access'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public function addSqlSuffix(\Elgg\Hook $hook) {
-		
-		$guid_column = $hook->getParam('guid_column');
-		if (empty($guid_column) || $hook->getParam('ignore_access')) {
-			return;
+	public function addSqlSuffix(\Elgg\Event $event): ?array {
+		$guid_column = $event->getParam('guid_column');
+		if (empty($guid_column) || $event->getParam('ignore_access')) {
+			return null;
 		}
 		
-		$table_alias = $hook->getParam('table_alias');
+		$table_alias = $event->getParam('table_alias');
 		$table_alias = $table_alias ? "{$table_alias}." : '';
 		
-		$clauses = $hook->getValue();
+		$clauses = $event->getValue();
 		$clauses['ors'] = elgg_extract('ors', $clauses, []);
 		
 		$clauses['ors']['post_as'] = "{$table_alias}{$guid_column} = {$this->entity_guid}";

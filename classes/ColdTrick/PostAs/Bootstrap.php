@@ -4,15 +4,18 @@ namespace ColdTrick\PostAs;
 
 use Elgg\DefaultPluginBootstrap;
 
+/**
+ * Plugin bootstrap
+ */
 class Bootstrap extends DefaultPluginBootstrap {
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public function boot() {
-		$hooks = $this->elgg()->hooks;
+		$events = $this->elgg()->events;
 		
-		$hooks->registerHandler('route:config', 'all', __NAMESPACE__ . '\RouteConfig::addPostAsMiddleware');
+		$events->registerHandler('route:config', 'all', __NAMESPACE__ . '\RouteConfig::addPostAsMiddleware');
 		
 		$this->validateSession();
 	}
@@ -21,7 +24,7 @@ class Bootstrap extends DefaultPluginBootstrap {
 	 * {@inheritDoc}
 	 */
 	public function ready() {
-		$this->proccessConfig();
+		$this->processConfig();
 	}
 	
 	/**
@@ -29,8 +32,8 @@ class Bootstrap extends DefaultPluginBootstrap {
 	 *
 	 * @return void
 	 */
-	protected function proccessConfig(): void {
-		$hooks = $this->elgg()->hooks;
+	protected function processConfig(): void {
+		$events = $this->elgg()->events;
 		
 		$config = post_as_get_config();
 		foreach ($config as $form_name => $settings) {
@@ -41,7 +44,7 @@ class Bootstrap extends DefaultPluginBootstrap {
 			
 			// register action listener for correct handling
 			$action = elgg_extract('action', $settings, $form_name);
-			$hooks->registerHandler('action:validate', $action, __NAMESPACE__ . '\SaveAction::prepareAction');
+			$events->registerHandler('action:validate', $action, __NAMESPACE__ . '\SaveAction::prepareAction');
 		}
 	}
 	
@@ -54,6 +57,7 @@ class Bootstrap extends DefaultPluginBootstrap {
 	 */
 	protected function validateSession(): void {
 		$session = $this->elgg()->session;
+		$session_manager = $this->elgg()->session_manager;
 		if (!$session->has('post_as_original_user')) {
 			return;
 		}
@@ -65,14 +69,14 @@ class Bootstrap extends DefaultPluginBootstrap {
 			return;
 		}
 		
-		if ($session->getLoggedInUserGuid() === $original_user->guid) {
+		if ($session_manager->getLoggedInUserGuid() === $original_user->guid) {
 			// how did we get here?
 			$session->remove('post_as_original_user');
 			return;
 		}
 		
 		// restore correct user
-		$session->setLoggedInUser($original_user);
+		$session_manager->setLoggedInUser($original_user);
 		$session->remove('post_as_original_user');
 	}
 }

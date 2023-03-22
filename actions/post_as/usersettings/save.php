@@ -46,6 +46,7 @@ if (!empty($removed_authorized)) {
 		if (!$no_longer_authorized instanceof \ElggUser) {
 			continue;
 		}
+		
 		$no_longer_authorized->removeRelationship($user->guid, POST_AS_RELATIONSHIP);
 	}
 }
