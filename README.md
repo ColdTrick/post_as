@@ -17,7 +17,7 @@ Features
 Developers
 ----------
 
-To get your plugin to support Post As register a plugin hook for `config` `post_as`
+To get your plugin to support Post As register an event handler for `config` `post_as`
 
 The result is an array in the format:
 
