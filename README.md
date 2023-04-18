@@ -1,7 +1,7 @@
 Post as
 ===========
 
-![Elgg 4.3](https://img.shields.io/badge/Elgg-4.3-green.svg)
+![Elgg 5.0](https://img.shields.io/badge/Elgg-5.0-green.svg)
 ![Lint Checks](https://github.com/ColdTrick/post_as/actions/workflows/lint.yml/badge.svg?event=push)
 [![Latest Stable Version](https://poser.pugx.org/coldtrick/post_as/v/stable.svg)](https://packagist.org/packages/coldtrick/post_as)
 [![License](https://poser.pugx.org/coldtrick/post_as/license.svg)](https://packagist.org/packages/coldtrick/post_as)
