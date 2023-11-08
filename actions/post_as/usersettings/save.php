@@ -2,14 +2,17 @@
 
 $plugin_id = get_input('plugin_id');
 $user_guid = (int) get_input('user_guid', elgg_get_logged_in_user_guid());
-if (empty($plugin_id) || empty($user_guid)) {
+if ($plugin_id !== 'post_as' || empty($user_guid)) {
 	return elgg_error_response(elgg_echo('error:missing_data'));
 }
 
 $plugin = elgg_get_plugin_from_id($plugin_id);
-$plugin_name = $plugin->getDisplayName();
-
 $user = get_user($user_guid);
+if (!$plugin instanceof \ElggPlugin || !$user instanceof \ElggUser || !$user->canEdit()) {
+	return elgg_error_response(elgg_echo('plugins:usersettings:save:fail', [$plugin_id]));
+}
+
+$plugin_name = $plugin->getDisplayName();
 
 $authorized_users = (array) get_input('authorized_users');
 array_walk($authorized_users, function(&$value) {
