@@ -11,7 +11,7 @@ echo elgg_view_field([
 	'default' => 'no',
 	'value' => 'yes',
 	'checked' => $plugin->allow_edit === 'yes',
-	'switch' => 1,
+	'switch' => true,
 ]);
 
 // editors
