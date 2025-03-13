@@ -5,6 +5,7 @@
  */
 
 return array (
+  'post_as:usersettings:title' => 'Post As',
   'relationship:can_post_as' => '%s kan publiceren namens %s',
   'post_as:usersettings:global_editor' => 'Een site beheerder heeft je geautoriseerd om content te publiceren namens alle leden van de community.',
   'post_as:usersettings:authorized_by' => 'De volgende gebruikers hebben jou geautoriseerd om content namens hum te mogen publiceren.',
