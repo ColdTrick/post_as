@@ -4,7 +4,7 @@
  */
 
 /**
- * Get all the users which have been autorized by the given user_guid
+ * Get all the users which have been authorized by the given user_guid
  *
  * @param int  $user_guid the user_guid to get users for
  * @param bool $guid_only return only guids
@@ -153,10 +153,6 @@ function post_as_get_config(): array {
 		'blog/save' => [
 			'type' => 'object',
 			'subtype' => 'blog',
-		],
-		'static/edit' => [
-			'type' => 'object',
-			'subtype' => 'static',
 		],
 	];
 	
