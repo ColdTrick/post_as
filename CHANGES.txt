@@ -1,6 +1,10 @@
 Version history
 ===============
 
+5.1 (2025-07-30):
+
+- removed: support for static plugin
+
 5.0.3 (2025-03-27):
 
 - several small chores/fixes
