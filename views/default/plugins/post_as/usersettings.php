@@ -5,7 +5,7 @@ if (!$page_owner->canEdit()) {
 	return;
 }
 
-/* @var $plugin \ElggPlugin */
+/** @var \ElggPlugin $plugin */
 $plugin = elgg_extract('entity', $vars);
 
 // other users who have authorized this user

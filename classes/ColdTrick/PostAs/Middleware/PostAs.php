@@ -47,7 +47,7 @@ class PostAs {
 	}
 	
 	/**
-	 * Add sql suffix so the current user is allowed to fetch (private) entities
+	 * Add SQL suffix so the current user is allowed to fetch (private) entities
 	 *
 	 * @param \Elgg\Event $event 'get_sql', 'access'
 	 *

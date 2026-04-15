@@ -24,7 +24,7 @@ if (!$global_editor) {
 		$user->guid => elgg_echo('post_as:myself', [$user->getDisplayName()]),
 	];
 	
-	/* @var $owner ElggUser */
+	/** @var \ElggUser $owner */
 	foreach ($owners as $owner) {
 		$options_values[$owner->guid] = $owner->getDisplayName();
 	}

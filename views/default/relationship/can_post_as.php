@@ -5,6 +5,7 @@
  * @uses $vars['relationship'] The friendship request relationship
  */
 
+/** @var \ElggRelationship $relationship */
 $relationship = elgg_extract('relationship', $vars);
 $inverse = (bool) elgg_extract('inverse_relationship', $vars, false);
 

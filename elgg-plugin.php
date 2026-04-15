@@ -23,6 +23,15 @@ return [
 	'actions' => [
 		'post_as/usersettings/save' => [],
 	],
+	'routes' => [
+		'collection:post_as:owner' => [
+			'path' => '/post_as/owner/{username}',
+			'resource' => 'post_as/owner',
+			'middleware' => [
+				UserPageOwnerCanEditGatekeeper::class,
+			],
+		],
+	],
 	'events' => [
 		'container_permissions_check' => [
 			'all' => [
@@ -42,15 +51,6 @@ return [
 		'setting' => [
 			'plugin' => [
 				'\ColdTrick\PostAs\PluginSettings::convertArrayToString' => [],
-			],
-		],
-	],
-	'routes' => [
-		'collection:post_as:owner' => [
-			'path' => '/post_as/owner/{username}',
-			'resource' => 'post_as/owner',
-			'middleware' => [
-				UserPageOwnerCanEditGatekeeper::class,
 			],
 		],
 	],

@@ -26,7 +26,7 @@ class OwnerBlock {
 			return null;
 		}
 
-		/* @var $result MenuItems */
+		/** @var MenuItems $result */
 		$result = $event->getValue();
 		
 		$result[] = \ElggMenuItem::factory([

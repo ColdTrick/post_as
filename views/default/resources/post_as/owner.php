@@ -5,7 +5,7 @@
 
 use Elgg\Exceptions\Http\EntityPermissionsException;
 
-/* @var $user \ElggUser */
+/** @var \ElggUser $user */
 $user = elgg_get_page_owner_entity();
 
 if (elgg_get_plugin_setting('allow_edit', 'post_as') !== 'yes') {
@@ -38,6 +38,7 @@ $content = elgg_call(ELGG_IGNORE_ACCESS, function() use ($user, $type_subtype_pa
 			'value' => $user->guid,
 			'type' => ELGG_VALUE_GUID,
 		],
+		'item_view' => 'post_as/listing/entity',
 		'no_results' => elgg_echo('post_as:posted:no_results'),
 	]);
 });

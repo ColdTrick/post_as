@@ -9,7 +9,7 @@
  * @param int  $user_guid the user_guid to get users for
  * @param bool $guid_only return only guids
  *
- * @return ElggUser[]|int[]
+ * @return \ElggUser[]|int[]
  */
 function post_as_get_authorized_users(int $user_guid, bool $guid_only = false): array {
 	if ($user_guid < 1) {
@@ -39,7 +39,7 @@ function post_as_get_authorized_users(int $user_guid, bool $guid_only = false): 
  * @param int  $user_guid the user to fetch for (default: current user)
  * @param bool $guid_only return only guids
  *
- * @return ElggUser[]|int[]
+ * @return \ElggUser[]|int[]
  */
 function post_as_get_posters(int $user_guid = 0, bool $guid_only = false): array {
 	if ($user_guid < 1) {
@@ -150,7 +150,7 @@ function post_as_is_global_editor(int $user_guid = 0): bool {
  */
 function post_as_get_config(): array {
 	$defaults = [
-		'blog/save' => [
+		'blog/edit' => [
 			'type' => 'object',
 			'subtype' => 'blog',
 		],
