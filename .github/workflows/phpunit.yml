@@ -3,11 +3,8 @@ name: PHPUnit Plugin Tests
 on: [push, pull_request]
 
 jobs:
-  phpunit5:
-    name: Run PHPUnit test suites Elgg 5
-    uses: ColdTrick/.github/.github/workflows/phpunit.yml@master
-  phpunit6:
-    name: Run PHPUnit test suites Elgg 6
+  phpunit:
+    name: Run PHPUnit test suites
     uses: ColdTrick/.github/.github/workflows/phpunit.yml@master
     with:
-      elgg_major_version: 6
+      elgg_major_version: 7
