@@ -1,6 +1,10 @@
 Version history
 ===============
 
+6.0 (2026-05-29):
+
+- changed: updated for Elgg 7.0
+
 5.1 (2025-07-30):
 
 - removed: support for static plugin
