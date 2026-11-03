@@ -2,6 +2,9 @@
 
 namespace ColdTrick\PostAs;
 
+use Elgg\Database\EntityTable;
+use Elgg\Database\QueryBuilder;
+
 /**
  * Permission event listener
  */
@@ -80,5 +83,43 @@ class Permissions {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Add post as GUIDs to access SQL
+	 *
+	 * @param \Elgg\Event $event 'get_sql', 'access'
+	 *
+	 * @return array|null
+	 */
+	public static function accessSQL(\Elgg\Event $event): ?array {
+		$ignore_access = $event->getParam('ignore_access');
+		$user_guid = $event->getParam('user_guid');
+		if ($ignore_access || $user_guid !== elgg_get_logged_in_user_guid()) {
+			return null;
+		}
+		
+		$qb = $event->getParam('query_builder');
+		if (!$qb instanceof QueryBuilder || $qb->getTableName() !== EntityTable::TABLE_NAME) {
+			return null;
+		}
+		
+		$post_as_guids = elgg()->session->get('post_as_guids');
+		if (empty($post_as_guids)) {
+			return null;
+		}
+		
+		$table_alias = $event->getParam('table_alias');
+		$guid_column = $event->getParam('guid_column');
+		
+		$alias = function ($column) use ($table_alias) {
+			return $table_alias ? "{$table_alias}.{$column}" : $column;
+		};
+		
+		$parts = $event->getValue();
+		
+		$parts['ors']['post_as'] = $qb->compare($alias($guid_column), 'in', $post_as_guids, ELGG_VALUE_GUID);
+		
+		return $parts;
 	}
 }

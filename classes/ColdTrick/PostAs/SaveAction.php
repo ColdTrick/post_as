@@ -139,6 +139,12 @@ class SaveAction {
 		}
 		
 		$entity->post_as_actor = $this->user->guid;
+		
+		// store entity GUID for access
+		$post_as_guids = (array) elgg()->session->get('post_as_guids');
+		$post_as_guids[] = $entity->guid;
+		$post_as_guids = array_unique($post_as_guids);
+		elgg()->session->set('post_as_guids', $post_as_guids);
 	}
 	
 	/**

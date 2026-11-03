@@ -38,6 +38,16 @@ return [
 				'\ColdTrick\PostAs\Permissions::canWriteToContainer' => [],
 			],
 		],
+		'get_sql' => [
+			'access' => [
+				'\ColdTrick\PostAs\Permissions::accessSQL' => [],
+			],
+		],
+		'login:after' => [
+			'user' => [
+				'\ColdTrick\PostAs\User::loginAfter' => [],
+			],
+		],
 		'permissions_check' => [
 			'all' => [
 				'\ColdTrick\PostAs\Permissions::canEdit' => [],
