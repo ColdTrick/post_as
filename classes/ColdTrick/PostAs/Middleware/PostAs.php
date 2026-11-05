@@ -2,6 +2,7 @@
 
 namespace ColdTrick\PostAs\Middleware;
 
+use Elgg\Database\QueryBuilder;
 use Elgg\Request;
 
 /**
@@ -55,7 +56,8 @@ class PostAs {
 	 */
 	public function addSqlSuffix(\Elgg\Event $event): ?array {
 		$guid_column = $event->getParam('guid_column');
-		if (empty($guid_column) || $event->getParam('ignore_access')) {
+		$qb = $event->getParam('query_builder');
+		if (!$qb instanceof QueryBuilder || empty($guid_column) || $event->getParam('ignore_access')) {
 			return null;
 		}
 		
@@ -65,7 +67,7 @@ class PostAs {
 		$clauses = $event->getValue();
 		$clauses['ors'] = elgg_extract('ors', $clauses, []);
 		
-		$clauses['ors']['post_as'] = "{$table_alias}{$guid_column} = {$this->entity_guid}";
+		$clauses['ors']['post_as'] = $qb->compare("{$table_alias}{$guid_column}", '=', $this->entity_guid, ELGG_VALUE_GUID);
 		
 		return $clauses;
 	}

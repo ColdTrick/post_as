@@ -100,7 +100,12 @@ class Permissions {
 		}
 		
 		$qb = $event->getParam('query_builder');
-		if (!$qb instanceof QueryBuilder || $qb->getTableName() !== EntityTable::TABLE_NAME) {
+		$guid_column = $event->getParam('guid_column');
+		if (!$qb instanceof QueryBuilder || empty($guid_column)) {
+			return null;
+		}
+		
+		if (!elgg()->session->isStarted()) {
 			return null;
 		}
 		
@@ -110,15 +115,12 @@ class Permissions {
 		}
 		
 		$table_alias = $event->getParam('table_alias');
-		$guid_column = $event->getParam('guid_column');
-		
-		$alias = function ($column) use ($table_alias) {
-			return $table_alias ? "{$table_alias}.{$column}" : $column;
-		};
+		$table_alias = $table_alias ? "{$table_alias}." : '';
 		
 		$parts = $event->getValue();
 		
-		$parts['ors']['post_as'] = $qb->compare($alias($guid_column), 'in', $post_as_guids, ELGG_VALUE_GUID);
+		$parts['ors'] = elgg_extract('ors', $parts, []);
+		$parts['ors']['post_as_guids'] = $qb->compare("{$table_alias}{$guid_column}", 'in', $post_as_guids, ELGG_VALUE_GUID);
 		
 		return $parts;
 	}
