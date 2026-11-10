@@ -43,11 +43,6 @@ return [
 				'\ColdTrick\PostAs\Permissions::accessSQL' => [],
 			],
 		],
-		'login:after' => [
-			'user' => [
-				'\ColdTrick\PostAs\User::loginAfter' => [],
-			],
-		],
 		'permissions_check' => [
 			'all' => [
 				'\ColdTrick\PostAs\Permissions::canEdit' => [],

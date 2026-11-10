@@ -93,6 +93,10 @@ class Permissions {
 	 * @return array|null
 	 */
 	public static function accessSQL(\Elgg\Event $event): ?array {
+		if (!elgg_is_logged_in()) {
+			return null;
+		}
+		
 		$ignore_access = $event->getParam('ignore_access');
 		$user_guid = $event->getParam('user_guid');
 		if ($ignore_access || $user_guid !== elgg_get_logged_in_user_guid()) {
@@ -105,11 +109,34 @@ class Permissions {
 			return null;
 		}
 		
-		if (!elgg()->session->isStarted()) {
+		$session = elgg()->session;
+		if (!$session->isStarted()) {
 			return null;
 		}
 		
-		$post_as_guids = elgg()->session->get('post_as_guids');
+		if (!$session->has('post_as_guids')) {
+			$session->set('post_as_guids', []);
+			if (post_as_get_posters($user_guid, true) || post_as_is_global_editor($user_guid)) {
+				$entities = elgg_call(ELGG_IGNORE_ACCESS, function() use ($user_guid) {
+					return elgg_get_entities([
+						'access_id' => ACCESS_PRIVATE,
+						'metadata_name_value_pairs' => [
+							'name' => 'post_as_actor',
+							'value' => $user_guid,
+						],
+						'limit' => 10,
+						'callback' => function ($row) {
+							return (int) $row->guid;
+						},
+					]);
+				});
+				if (!empty($entities)) {
+					$session->set('post_as_guids', $entities);
+				}
+			}
+		}
+		
+		$post_as_guids = $session->get('post_as_guids');
 		if (empty($post_as_guids)) {
 			return null;
 		}
